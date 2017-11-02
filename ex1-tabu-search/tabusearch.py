@@ -66,29 +66,6 @@ def get_coordinates_from(data_path):
     return coordinates
 
 
-def euclidean_dist(p1, p2):
-    """Calcula a distância euclidiana entre os pontos.
-
-    Calcula o valor da distância d(p,q), onde
-
-        d(p,q) = d(q,p) = Sqrt(Sum_i^n {p_i - q_i) ^ 2})
-
-    ou em formato vetorial, sejam 'p' e 'q' vetores em R^n, temos
-
-        d(p,q) = Sqrt((p - q) .* (p - q))
-    
-    onde '.*' é a operador do 'produto hadamard'.
-
-    Args:
-        p1 (numpy.ndarray): Ponto em R^n.
-        p2 (numpy.ndarray): Ponto em R^n.
-
-    Returns:
-        float: Distância euclidiana entre p1 e p2.
-    """
-    return (np.sum((p1 - p2) ** 2)) ** (1/2)
-
-
 def get_cost_matrix_from(coordinates):
     """Obtém a matriz de custos entre as arestas.
     
@@ -111,7 +88,7 @@ def get_cost_matrix_from(coordinates):
     coord = np.asarray(coordinates, dtype=np.float32)
     num_edges = coord.shape[0]
 
-    matrix = [euclidean_dist(r1, r2) for r1 in coord for r2 in coord]
+    matrix = [np.linalg.norm(r1-r2) for r1 in coord for r2 in coord]
     return np.asarray(matrix).reshape((num_edges, num_edges))
 
 
