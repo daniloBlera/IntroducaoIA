@@ -5,7 +5,7 @@ import random
 from unittest import TestCase
 
 import numpy as np
-from tabumain import *
+from tabusearch import *
 
 
 class TestFunctions(TestCase):
