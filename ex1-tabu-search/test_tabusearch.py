@@ -4,6 +4,7 @@ import os
 import random
 from unittest import TestCase
 
+import numpy as np
 from tabumain import *
 
 
@@ -31,4 +32,22 @@ class TestFunctions(TestCase):
 
         for i in range(len(walk)):
             self.assertEqual(pool[i], expected[i])
+
+    def test_cost_calculation(self):
+        edges_num = 5
+        walk = list(range(edges_num))
+        
+        ones = np.ones((edges_num, edges_num), dtype=np.int32)
+        triangular = np.triu(ones, 1)
+
+        # Symmetry around the main diagonal
+        costs = np.random.rand(edges_num, edges_num) * triangular
+        costs = costs + costs.transpose()
+
+        obtained = get_cost_of(walk, costs)
+
+        expected = 0
+        expected = costs[0,1] + costs[1,2] + costs[2,3] + costs[3,4] + costs[4,0]
+
+        self.assertEqual(obtained, expected)
 
