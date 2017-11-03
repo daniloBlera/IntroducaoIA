@@ -8,7 +8,7 @@ import numpy as np
 from tabusearch import *
 
 
-HANDLER = logging.StreamHandler()
+HANDLER = logging.StreamHandler(sys.stdout)
 HANDLER.setLevel(logging.DEBUG)
 
 LOGGER = logging.getLogger('tabusearch-module-logger')
