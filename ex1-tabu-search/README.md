@@ -23,5 +23,5 @@ optional arguments:
 Um exemplo de execução usando o ```bash```
 
 ```bash
-python3 busca.py -i 50 -l 25 -s 1 djibuti.txt
+python3 busca.py -i 50 -l 25 -s 1 djibouti.txt
 ```
