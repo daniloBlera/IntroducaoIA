@@ -15,6 +15,7 @@ LOGGER = logging.getLogger('tabusearch-module-logger')
 LOGGER.setLevel(logging.INFO)
 LOGGER.addHandler(HANDLER)
 
+
 def main(data_path, iterations, max_tabu_length):
     coordinates = get_coordinates_from(data_path)
     costs = get_cost_matrix_from(coordinates)
