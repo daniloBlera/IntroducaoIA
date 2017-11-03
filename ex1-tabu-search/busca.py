@@ -98,8 +98,9 @@ if __name__ == '__main__':
     if args.o:
         LOGGER.setLevel(logging.CRITICAL)
 
-    LOGGER.info('TSP WITH TABU SEARCH\nARQUIVO: \'%s\'\n', args.DATA)
+    LOGGER.info('--TSP WITH TABU SEARCH--')
     LOGGER.info('--PARÂMETROS--')
+    LOGGER.info('ARQUIVO: \'%s\'', args.DATA)
 
     iterations = 100
     if args.i:
@@ -116,8 +117,8 @@ if __name__ == '__main__':
 
     if args.s:
         np.random.seed(args.s)
-        LOGGER.info('SEED UTILIZADA: %d\n', args.s)
+        LOGGER.info('SEED UTILIZADA: %d', args.s)
 
-    LOGGER.info('BUSCANDO SOLUÇÃO...')
+    LOGGER.info('\nBUSCANDO SOLUÇÃO...')
     main(args.DATA, iterations, max_tabu_length)
 
