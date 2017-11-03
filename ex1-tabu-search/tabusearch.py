@@ -11,7 +11,7 @@ class SimpleFIFO:
         self.__max_length = max_length
         self.__elements = []
 
-    def insert(self, element):
+    def push(self, element):
         self.__elements.append(element)
 
         if len(self.__elements) > self.__max_length:
@@ -45,7 +45,7 @@ def get_coordinates_from(data_path):
     arestas por meio de um array no formato
 
         [['x_1', 'y_1'], ['x_2', 'y_2'], ..., ['x_n', 'y_n']]
-   
+
     onde o i-ésimo par da lista corresponde às coordenadas da i-ésima aresta.
 
     Arg:
@@ -68,7 +68,7 @@ def get_coordinates_from(data_path):
 
 def get_cost_matrix_from(coordinates):
     """Obtém a matriz de custos entre as arestas.
-    
+
     Dada uma lista de N arestas em R^2 de um grafo completo, retorna um ndarray 
     de formato (N x N) contendo os custos entre cada dois nós adjacentes
 
@@ -78,7 +78,7 @@ def get_cost_matrix_from(coordinates):
         |  .    .         .  |   *  C_ii = 0;
         |  .    .         .  |   *  C_ij = C_ji;
         | C_N1 C_N2 ... C_NN |
-    
+
     Arg:
         coordinates ([['str', 'str']]): lista de coordenadas em R^2.
 
@@ -94,7 +94,7 @@ def get_cost_matrix_from(coordinates):
 
 def get_mutation_from(walk, index):
     """Obtém a mutação do passeio.
-    
+
     Retorna o resultado obtido pela mutação do caminho aplicada entre as
     posições 'i' e 'i+1'.
 
@@ -107,28 +107,34 @@ def get_mutation_from(walk, index):
         inded(int): Posição em que a mutação deve ser aplicada.
     """
     mutation = walk[:]
+    edges_num = len(mutation)
     aux = mutation[index]
-    mutation[index] = mutation[(index+1) % 5]
-    mutation[(index+1) % 5] = aux
-    
+
+    mutation[index] = mutation[(index+1) % edges_num]
+    mutation[(index+1) % edges_num] = aux
+
     return mutation
 
 
 def get_pool_from(walk):
     """Obtém uma lista de mutações.
-    
-    Retorna uma lista contendo os resultados da aplicação de mutação entre todos
-    os possíveis elementos adjacentes do caminho, ou seja, dado o caminho
+
+    Retorna uma lista contendo os resultados da aplicação da operação de mutação
+    'swap' entre as arestas 'i' e 'i+1', iterativamente da segunda à penúltima aresta
+    do caminho enquanto o primeiro elemento é mantido fixo durante o processo, ou
+    seja, dado o caminho
 
         [1,2,3,4,5]
 
-    retorna a lista de mutações
+    a função 'get_pool_from' retorna a lista de mutações
 
-        [2,1,3,4,5]
-        [1,3,2,4,5]
-        [1,2,4,3,5]
-        [1,2,3,5,4]
-        [5,2,3,4,1]
+        [1,3,2,4,5] -- resultado da mutação [1,|2,3|,4,5] -> [1,|3,2|,4,5]
+        [1,2,4,3,5] -- resultado da mutação [1,2,|3,4|,5] -> [1,2,|4,3|,5]
+        [1,2,3,5,4] -- resultado da mutação [1,2,3,|4,5|] -> [1,2,3,|5,4|]
+
+    Note que diferentemente do processo de mutação normalmente aplicado aos pares
+    de arestas (1,2), (2,3), ..., (N-1, N), (N,0), onde N é o comprimento do caminho,
+    nesta função a mutação é aplicada aos pares (2,3), (4,5), ..., (N-1, N).
 
     Arg:
         walk [int]: Lista de arestas visitadas.
@@ -137,10 +143,43 @@ def get_pool_from(walk):
         [[int]]: Lista de mutações do caminho original.
     """
     num_edges = len(walk)
-    pool = [None] * num_edges
+    pool = []
+
+    for i in range(1, num_edges - 1):
+        mutation = get_mutation_from(walk, i)
+        pool.append(mutation)
+
+    return pool
+
+
+def get_pool_from_ALT(walk):
+    """Obtém uma lista de mutações.
+
+    Retorna uma lista contendo os resultados da aplicação da operação de mutação
+    'swap' entre as arestas 'i' e '(i+1) mod n' ou seja, dado o caminho
+
+        [1,2,3,4,5]
+
+    a função 'get_pool_from' retorna a lista de mutações
+
+        [2,1,3,4,5] -- resultado da mutação [>1,2<,3,4,5] -> [>2,1<,2,4,5]
+        [1,3,2,4,5] -- resultado da mutação [1,>2,3<,4,5] -> [1,>3,2<,4,5]
+        [1,2,4,3,5] -- resultado da mutação [1,2,>3,4<,5] -> [1,2,>4,3<,5]
+        [1,2,3,5,4] -- resultado da mutação [1,2,3,>4,5<] -> [1,2,3,>5,4<]
+        [5,2,3,4,1] -- resultado da mutação [1<,2,3,4,>5] -> [5<,2,3,4,>1]
+
+    Arg:
+        walk [int]: Lista de arestas visitadas.
+
+    Returns:
+        [[int]]: Lista de mutações do caminho original.
+    """
+    num_edges = len(walk)
+    pool = []
 
     for i in range(num_edges):
-        pool[i] = get_mutation_from(walk, i)
+        mutation = get_mutation_from(walk, i)
+        pool.append(mutation)
 
     return pool
 
@@ -165,4 +204,10 @@ def get_cost_of(walk, cost_matrix):
         cost += cost_matrix[origin, destiny]
 
     return cost
+
+
+def compact_form_of(walk):
+    """A nicer format for printing."""
+    string_form = [str(e) for e in walk]
+    return '-'.join(string_form)
 
