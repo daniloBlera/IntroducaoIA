@@ -1,7 +1,9 @@
-# Implementação inicial do algoritmo de busca tabu para TSP
-Utiliza a versão 3.x do Python (testado na versão 3.6).
+# Implementação inicial de busca tabu em TSP
+# Requisitos
+*   Python 3.x (testado na versão 3.6);
+*   `numpy`.
 
-## Execução
+# Como é que eu rodo isso?
 Copiado da ajuda do `argparse`...
 ```
 usage: busca.py [-h] [-i I] [-l L] [-v] [-o] [-s S] DATA
@@ -16,4 +18,10 @@ optional arguments:
   -v          Habilitar modo verboso
   -o          Retornar caminho e custo apenas
   -s S        Valor do 'seed'
+```
+
+Um exemplo de execução usando o ```bash```
+
+```bash
+python3 busca.py -i 50 -l 25 -s 1 djibuti.txt
 ```
