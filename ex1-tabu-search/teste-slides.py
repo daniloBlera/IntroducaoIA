@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import argparse
 import logging
-import sys
 
 import numpy as np
 from tabusearch import *
@@ -20,10 +18,12 @@ def translate(numbers):
     code = ['A','B','C','D','E']
     return [code[i] for i in numbers]
 
+
 def translate_pair(number_costs):
     code = ['A','B','C','D','E']
     numbers, cost = number_costs
-    text = [code[i] for i in numbers]
+    #  text = [code[i] for i in numbers]
+    text = translate(numbers)
 
     return (text, cost)
 
@@ -84,13 +84,6 @@ def debugging_run():
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-s', help='Valor do \'seed\'', type=int)
-    args = parser.parse_args()
-
-    if args.s:
-        np.random.seed(args.s)
-
     LOGGER.setLevel(logging.DEBUG)
     print('--RUNNING DEBUG--')
     debugging_run()
